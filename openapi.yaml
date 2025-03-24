@@ -1,0 +1,86 @@
+openapi: 3.0.1
+info:
+  title: Google Sheets DB API
+  description: API לניהול מסד נתונים בגוגל שיטס באמצעות Google Apps Script.
+  version: '1.0'
+servers:
+  - url: 'https://script.google.com/macros/s/AKfycbygTx0kTsc7OS25PSXOIdMnNy3_1YeVPPJ7pHkRZgNxXeiJDtdT11C6GPoo9EaJj3VXvA/exec'
+paths:
+  '/':
+    get:
+      summary: קבלת כל הנתונים מהגיליון
+      parameters:
+        - in: query
+          name: sheet
+          required: false
+          schema:
+            type: string
+          description: שם הגיליון (ברירת מחדל 'DB')
+      responses:
+        '200':
+          description: רשומות מהגיליון
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  sheet:
+                    type: string
+                  rows:
+                    type: array
+                    items:
+                      type: object
+                      additionalProperties:
+                        type: string
+    post:
+      summary: הוספת/עדכון/מחיקת רשומה בגיליון
+      parameters:
+        - in: query
+          name: sheet
+          required: false
+          schema:
+            type: string
+          description: שם הגיליון (ברירת מחדל 'DB')
+        - in: query
+          name: method
+          required: true
+          schema:
+            type: string
+          description: סוג הפעולה ('add', 'update', 'delete')
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                  description: מזהה ייחודי לרשומה (נדרש לעדכון/מחיקה)
+                name:
+                  type: string
+                  description: שם הלקוח
+                phone:
+                  type: string
+                  description: מספר טלפון
+                interest:
+                  type: string
+                  description: תחום עניין
+      responses:
+        '200':
+          description: תוצאה מהגיליון
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  sheet:
+                    type: string
+                  data:
+                    type: object
+                    additionalProperties:
+                      type: string
